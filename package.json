@@ -1,0 +1,45 @@
+{
+  "name": "part8",
+  "private": true,
+  "version": "1.0.0",
+  "description": "FullStack Open Exercises Part8",
+  "workspaces": [
+    "library-backend",
+    "library-frontend"
+  ],
+  "engines": {
+    "npm": "7.9.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "SKIP_PREFLIGHT_CHECK=TRUE npm run build --workspace=library-frontend",
+    "start": "npm run start --workspace=library-backend",
+    "dev:api": "npm run build && npm run dev --workspace=library-backend"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ibernal-git/part8.git"
+  },
+  "author": "Imanol Bernal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ibernal-git/part8/issues"
+  },
+  "homepage": "https://github.com/ibernal-git/part8#readme",
+  "eslintConfig": {
+    "extends": "./node_modules/standard/eslintrc.json",
+    "env": {
+      "cypress/globals": true,
+      "jest": true
+    },
+    "plugins": [
+      "cypress"
+    ]
+  },
+  "devDependencies": {
+    "eslint-plugin-cypress": "^2.11.2",
+    "eslint-plugin-jest": "^24.3.4",
+    "standard": "^16.0.3"
+  }
+}
