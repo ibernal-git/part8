@@ -15,7 +15,6 @@
     "build": "SKIP_PREFLIGHT_CHECK=TRUE npm run build --workspace=library-frontend",
     "start": "npm run start --workspace=library-backend",
     "dev:api": "npm run build && npm run dev --workspace=library-backend"
-
   },
   "repository": {
     "type": "git",
@@ -28,7 +27,9 @@
   },
   "homepage": "https://github.com/ibernal-git/part8#readme",
   "eslintConfig": {
-    "extends": "./node_modules/standard/eslintrc.json",
+    "extends": [
+      "./node_modules/standard/eslintrc.json"
+    ],
     "env": {
       "cypress/globals": true,
       "jest": true

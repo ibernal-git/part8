@@ -1,4 +1,4 @@
-  
+
 import React from 'react'
 
 const Authors = (props) => {
@@ -13,7 +13,7 @@ const Authors = (props) => {
       <table>
         <tbody>
           <tr>
-            <th></th>
+            <th />
             <th>
               born
             </th>

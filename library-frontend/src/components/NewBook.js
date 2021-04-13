@@ -13,7 +13,7 @@ const NewBook = (props) => {
 
   const submit = async (event) => {
     event.preventDefault()
-    
+
     console.log('add book...')
 
     setTitle('')
@@ -58,7 +58,7 @@ const NewBook = (props) => {
             value={genre}
             onChange={({ target }) => setGenre(target.value)}
           />
-          <button onClick={addGenre} type="button">add genre</button>
+          <button onClick={addGenre} type='button'>add genre</button>
         </div>
         <div>
           genres: {genres.join(' ')}
