@@ -14,7 +14,8 @@
   "scripts": {
     "build": "SKIP_PREFLIGHT_CHECK=TRUE npm run build --workspace=library-frontend",
     "start": "npm run start --workspace=library-backend",
-    "dev:api": "npm run build && npm run dev --workspace=library-backend"
+    "dev:api": "npm run dev --workspace=library-backend",
+    "dev:all": "npm run build && npm run dev --workspace=library-backend"
   },
   "repository": {
     "type": "git",
@@ -35,11 +36,13 @@
       "jest": true
     },
     "plugins": [
-      "cypress"
+      "cypress",
+      "graphql"
     ]
   },
   "devDependencies": {
     "eslint-plugin-cypress": "^2.11.2",
+    "eslint-plugin-graphql": "^4.0.0",
     "eslint-plugin-jest": "^24.3.4",
     "standard": "^16.0.3"
   }
