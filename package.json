@@ -15,6 +15,7 @@
     "build": "SKIP_PREFLIGHT_CHECK=TRUE npm run build --workspace=library-frontend",
     "start": "npm run start --workspace=library-backend",
     "dev:api": "npm run dev --workspace=library-backend",
+    "dev:front": "npm start --workspace=library-frontend",
     "dev:all": "npm run build && npm run dev --workspace=library-backend"
   },
   "repository": {

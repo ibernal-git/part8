@@ -4,8 +4,14 @@ const Books = (props) => {
   if (!props.show) {
     return null
   }
-
-  const books = []
+  if (!props.books) {
+    return (
+      <div>
+        <h2>books</h2>
+        <p>Loading...</p>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -22,7 +28,7 @@ const Books = (props) => {
               published
             </th>
           </tr>
-          {books.map(a =>
+          {props.books.map(a =>
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author}</td>
