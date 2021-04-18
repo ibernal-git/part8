@@ -4,8 +4,8 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
-import { useQuery } from '@apollo/client'
-import { ALL_AUTHORS, BOOKS_BY_GENRE } from './queries'
+import { useQuery, useSubscription, useApolloClient } from '@apollo/client'
+import { ALL_AUTHORS, BOOKS_BY_GENRE, BOOK_ADDED } from './queries'
 import Recommend from './components/Recommend'
 import Notification from './components/Notification'
 
@@ -23,6 +23,8 @@ const App = () => {
   const books = useQuery(BOOKS_BY_GENRE, { variables: { genre: genre } })
   const allBooks = useQuery(BOOKS_BY_GENRE, { variables: { genre: '' } })
   const [token, setToken] = useState(null)
+
+  const store = useApolloClient()
 
   useEffect(() => {
     const savedToken = window.localStorage.getItem('token')
@@ -54,6 +56,46 @@ const App = () => {
     setTimeout(() => {
       setErrorMessage(null)
     }, 5000)
+  }
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const newBook = subscriptionData.data.bookAdded
+
+      // window.alert(JSON.stringify(subscriptionData.data.bookAdded))
+      handleCache(newBook)
+    }
+  })
+
+  const handleCache = (newBook) => {
+    const booksInStore = store.readQuery({ query: BOOKS_BY_GENRE, variables: { genre: '' } })
+    store.writeQuery({
+      query: BOOKS_BY_GENRE,
+      variables: { genre: '' },
+      data: {
+        ...booksInStore,
+        allBooks: [...booksInStore.allBooks, newBook]
+      }
+    })
+
+    const authorsInStore = store.readQuery({ query: ALL_AUTHORS })
+    const authorIsCached = authorsInStore.allAuthors.find(a => a.id === newBook.author.id)
+
+    let newAuthors
+    if (authorIsCached) {
+      newAuthors = [...authorsInStore.allAuthors
+        .map(a => a.id === newBook.author.id ? { ...a, bookCount: newBook.author.bookCount } : a)]
+    } else {
+      newAuthors = [...authorsInStore.allAuthors, newBook.author]
+    }
+
+    store.writeQuery({
+      query: ALL_AUTHORS,
+      data: {
+        ...authorsInStore,
+        allAuthors: newAuthors
+      }
+    })
   }
 
   return (
@@ -93,6 +135,7 @@ const App = () => {
       <NewBook
         addGenres={addGenres}
         setError={handleNotification}
+        // handleCache={handleCache}
         show={page === 'add'}
       />
       <Recommend

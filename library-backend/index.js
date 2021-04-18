@@ -5,6 +5,8 @@ const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
 const jwt = require('jsonwebtoken')
+const { PubSub } = require('apollo-server')
+const pubsub = new PubSub()
 
 console.log('connecting to database')
 
@@ -64,6 +66,10 @@ const typeDefs = gql`
       password: String!
     ): Token
   }
+
+  type Subscription {
+    bookAdded: Book!
+  }  
 `
 const getBooks = async (query) => {
   return await Book.find(query).populate('author', { name: 1, born: 1 })
@@ -113,8 +119,11 @@ const resolvers = {
 
         const newBook = new Book({ ...args, author: authorId })
         await newBook.save()
+        const book = newBook.populate('author', { name: 1, born: 1 }).execPopulate()
 
-        return newBook.populate('author', { name: 1, born: 1 }).execPopulate()
+        pubsub.publish('BOOK_ADDED', { bookAdded: book })
+
+        return book
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args
@@ -162,6 +171,11 @@ const resolvers = {
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
     }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
+    }
   }
 }
 
@@ -181,6 +195,7 @@ const server = new ApolloServer({
   }
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
