@@ -78,6 +78,7 @@ const Authors = (props) => {
               <div>
                 born
                 <input
+                  type='number'
                   value={birthyear}
                   onChange={({ target }) => setBirthyear(target.value)}
                 />

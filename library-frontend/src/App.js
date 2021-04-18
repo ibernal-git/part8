@@ -7,11 +7,13 @@ import LoginForm from './components/LoginForm'
 import { useQuery } from '@apollo/client'
 import { ALL_AUTHORS, BOOKS_BY_GENRE } from './queries'
 import Recommend from './components/Recommend'
+import Notification from './components/Notification'
 
 const App = () => {
   const [page, setPage] = useState('authors')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const authors = useQuery(ALL_AUTHORS)
   /*
@@ -47,6 +49,12 @@ const App = () => {
     const updatedGenres = new Set(genres.concat(newGenres))
     setGenres([...updatedGenres])
   }
+  const handleNotification = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
 
   return (
     <div>
@@ -66,6 +74,7 @@ const App = () => {
         }
 
       </div>
+      <Notification errorMessage={errorMessage} />
 
       <Authors
         show={page === 'authors'}
@@ -83,6 +92,7 @@ const App = () => {
 
       <NewBook
         addGenres={addGenres}
+        setError={handleNotification}
         show={page === 'add'}
       />
       <Recommend
@@ -91,6 +101,7 @@ const App = () => {
 
       <LoginForm
         show={page === 'login'}
+        setError={handleNotification}
         setToken={setToken}
         setPage={setPage}
       />

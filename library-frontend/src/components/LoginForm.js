@@ -12,6 +12,9 @@ const LoginForm = (props) => {
       window.localStorage.setItem('token', token)
       props.setToken(token)
       props.setPage('authors')
+    },
+    onError: (error) => {
+      props.setError(error.graphQLErrors[0].message)
     }
   })
 
