@@ -16,7 +16,11 @@ const Books = (props) => {
   return (
     <div>
       <h2>books</h2>
-
+      {
+        props.genre
+          ? <p>in genre <strong>{props.genre}</strong></p>
+          : null
+      }
       <table>
         <tbody>
           <tr>
@@ -31,12 +35,19 @@ const Books = (props) => {
           {props.books.map(a =>
             <tr key={a.title}>
               <td>{a.title}</td>
-              <td>{a.author}</td>
+              <td>{a.author.name}</td>
               <td>{a.published}</td>
             </tr>
           )}
         </tbody>
       </table>
+      {
+        props.genres.map(genre => {
+          return <button key={genre} onClick={() => props.handleGenre(genre)}>{genre}</button>
+        })
+      }
+      <button onClick={() => props.handleGenre('')}>All</button>
+
     </div>
   )
 }
